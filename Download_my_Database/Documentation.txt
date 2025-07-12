@@ -1,0 +1,17 @@
+ 
+Nirajan Gurung
+---------------------------------------------
+ If you want this code 
+ contact me : delltamu0@gmail.com
+
+ # for first setup
+
+  =>	remember the (username and password)
+
+
+
+-----------------------------
+ #package
+1) Dapper
+2)SixLabors.ImageSharp
+3)system.Data.SqlClient
