@@ -1,0 +1,402 @@
+﻿@{
+    Layout = "~/Pages/Shared/_layout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">Document Upload</h1>
+
+    <!-- Form Section -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Upload Document</h6>
+        </div>
+        <div class="card-body">
+            <input type="hidden" id="dId">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                <select class="form-control" id="userId">
+                    @{
+                        if (ViewBag.userData != null)
+                        {
+                            <option value="0">Choose name</option>
+                            foreach (var item in ViewBag.userData)
+                            {
+                                <option value="@item.intUserId">@item.name</option>
+
+                            }
+                        }
+                        else
+                        {
+                            <option value="0">User person name is empty</option>
+                        }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label> Document Image</label>
+
+                    <input class="file-upload-input fui" type='file' id="documentImage" name="documentImage" onchange="document.getElementById('image').src = window.URL.createObjectURL(this.files[0]);" tabindex="2" />
+                    <img id="image"
+                         src="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"
+                         style="height: 100px; width:266px; display: block !important;"
+                         class="img-thumbnail" />
+
+                    <p id="imgTitle" style="color:white;"></p>
+
+                </div>
+
+            <div class="form-group">
+                <button class="btn btn-outline-primary" type="button" id="AddDocument" onclick="AddDocument()"> Add</button>
+                <button class="btn btn-outline-warning" type="button" id="UpdateDocument" onclick="UpdateDocument()"> Update</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Search</h6>
+            <input type="text" id="searchDocument" class="form-control mr-sm-5" placeholder="Search Document">
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Document Table</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>S.N</th>
+                            <th>Name</th>
+                            <th>Document Image</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyDocument"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<section class="delete-save-modal modal fade" id="save-modal" role="dialog" style="z-index: 9999;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" style="background: aliceblue;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <span> <i class="fas fa-edit"></i> </span>
+                <p>Are you sure  you want to continue?</p>
+                <input type="hidden" id="delid" ng-model="delid" />
+                <input type="hidden" id="delcat" ng-model="delcat" />
+                <div class="btns">
+                    <button class="btn-default yes" type="button" id="btnupdateadd">Yes</button>
+                    <button class="btn-default no" type="button" data-dismiss="modal" id="btndelno">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Delete Modal -->
+<section id="delete" class="delete-save-modal modal fade" role="dialog" style="z-index: 9999;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <input type="text" id="idName" hidden>
+                <span> <i class="fas fa-trash-alt"></i></span>
+                <p>Are you sure? You want to delete this.</p>
+                <div class="btns">
+                    <button type="button" onclick="ConfirmDelete();" class="btn-default yes btnyes">Yes</button>
+                    <button type="button" class="btn-default no" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    var oldDocumentImage = "";
+
+        $(document).ready(function () {
+
+        });
+
+        $(function () {
+        document.title = 'Document';
+
+        $('#userId').focus();
+        documentList();
+        $('#UpdateDocument').hide();
+    });
+
+     $('#searchDocument').keyup(function (e) {
+        if (e.keyCode == 13) {
+            var value = $(this).val().toLowerCase();
+            $("#tbodyDocument tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        }
+    });
+
+    $('#documentImage').change(function () {
+        $('#image').show();
+        var File = this.files;
+        if (File && File[0]) {
+            ImageRead(File[0], '#image', '#imgTitle');
+        }
+    });
+
+    var ImageRead = function (file, id, label) {
+        var reader = new FileReader;
+        var image = new Image;
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+            image.src = _file.target.result;
+            image.onload = function () {
+                var height = this.height;
+                var width = this.width;
+                var type = this.type;
+                var size = ~~(file.size / 1024) + "KB";
+                $(id).attr('src', _file.target.result);
+                $(label).text("Size:" + size + ", " + height + "X" + width + "");
+                $(label).css("color", "red");
+
+            };
+        };
+    };
+
+    function keyEvent(foc) {
+        if (event.keyCode == 13) {
+            $(foc).focus();
+        }
+    }
+
+    function reset(){
+        $('#userId').val('0');
+        $('#image').attr("src", "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png");
+    }
+
+    function AddDocument() {
+
+        var imageData = document.getElementById("documentImage").files[0];
+        var fd = new FormData();
+        var files = $("#documentImage").get(0).files;
+        if (files.length > 0) {
+            fd.append("documentImg", imageData);
+        }
+        else {
+            var oldImage = "";
+            fd.append("dImage", oldImage);
+            $('#documentImage').val('');
+        }
+        fd.append("userId", $.trim($('#userId').val()));
+
+
+        if ($('#userId').find('option:selected').val() === "0") {
+            toastr.error("Chooose name", "Alert");
+            $('#userId').focus();
+        }
+        else {
+            $.ajax({
+                method: "POST",
+                url: "/Document/AddDocument",
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if(data == "1"){
+                        toastr.success("Added Successfully");
+                        reset();
+                        documentList();
+                        $('#userId').focus();
+                        $('#AddDocument').show();
+                        $('#UpdateDocument').hide();
+                    }
+                    else{
+                         toastr.error("Invalid Data", "Alert");
+                    }
+                }
+            });
+        }
+    }
+
+    function documentList() {
+
+        $.ajax({
+            url: "/Document/GetDocumentList",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+
+                var htm = "";
+                var i = 0;
+                var sn = 0;
+                if (data.length !== 0) {
+                    $.each(data, function (i, item) {
+                        i++;
+                        sn++;
+
+                        htm += '<tr style="cursor:pointer;" data-id="' + item.documentId + '">';
+                        htm += '<td>' + sn + '</td>';
+                        htm += '<td>' + item.name + '</td>';
+                        htm += '<td><img src="/image/document/' + item.dImage + '" class="img-thumbnail" style="height: 80px; width: 80px;" /></td>';
+
+                        htm += item.status == 1 ? '<td class="statusE"><span class="badge bg-success">Active</span></td>' : '<td class="statusE"><span class="badge bg-warning text-dark">Pending</span></td>';
+
+                        htm += '<td><span><button data-id="' + item.documentId + '"  class="btn btn-primary CVedit"  data-toggle="tooltip" title="Edit" data-placement="top"><i class="fas fa-edit"></i></button></span><span style="margin-left: 5px;"><button data-deleteId="' + item.documentId + '"  class="btn btn-danger CVdelete"  title="Delete" data-img="' + item.dImage + '"  data-placement="top"><i class="fas fa-trash-alt"></i></button></span></td>';
+
+                        htm += '</tr>';
+
+                    });
+                    $('#tbodyDocument').html(htm);
+                }
+                else {
+                    htm += '-------------------------------------Data Not Avialable---------------------------------------------'
+                }
+
+            },
+            error: function () {
+                $('#tbodyDocument').html("<tr><td colspan='8'><center style='color:red;>Data Not Found</center></td></tr>");
+            }
+        });
+    }
+
+    $('#tbodyDocument').on('click', '.CVedit', function () {
+        var id = $(this).attr('data-id');
+        $.ajax({
+            url: "/Document/getDocumentById?id=" + id,
+
+            dataType: 'json',
+            method: 'get',
+            success: function (data) {
+                $('#userId').focus();
+                $('#dId').val(data.documentId);
+                $('#userId').val(data.userId).trigger('change');
+
+                oldDocumentImage = data.dImage;
+                $('#image').attr("src", "/image/document/" + data.dImage);
+
+               $('#AddDocument').hide();
+               $('#UpdateDocument').show();
+            },
+            error: function (e) {
+                toastr.error()
+
+            }
+
+        });
+    });
+
+    function UpdateDocument() {
+
+        var imageData = document.getElementById("documentImage").files[0];
+        var fd = new FormData();
+        var files = $("#documentImage").get(0).files;
+        if (files.length > 0) {
+            fd.append("documentUpdateImg", imageData);
+            fd.append("deleteOldImage", oldDocumentImage); //for delete old Image
+        }
+        else {
+            var oldImage = oldDocumentImage;
+            fd.append("dImage", oldImage);
+            $('#documentImage').val('');
+        }
+        fd.append("documentId", $.trim($('#dId').val()));
+        fd.append("userId", $.trim($('#userId').val()));
+
+
+        if ($('#userId').find('option:selected').val() === "0") {
+            toastr.error("Chooose name", "Alert");
+            $('#userId').focus();
+        }
+        else {
+            $.ajax({
+                method: "POST",
+                url: "/Document/UpdateDocument",
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if(data == "1"){
+                        toastr.success("Update Successfully");
+                        reset();
+                        documentList();
+                        $('#userId').focus();
+                        $('#AddDocument').show();
+                        $('#UpdateDocument').hide();
+                    }
+                    else{
+                         toastr.error("Invalid Data", "Alert");
+                    }
+                }
+            });
+        }
+    }
+
+
+    var deleteIdD;
+    var deleteUrlD;
+    var delCallBackfuncD;
+    var nameOfImage;
+
+    //for modal delete
+
+    $('#tbodyDocument').on("click", ".CVdelete", function () {
+        var id = $(this).attr("data-deleteId");
+        var imgName = $(this).attr("data-img");
+
+        var url = "/Document/deleteDocument";
+        var callbackfnc = function () {
+            documentList('');
+        };
+        DeleteConfirmationD(id, url, callbackfnc, imgName);
+    });
+
+
+    function DeleteConfirmationD(id, url, callBackFunc, imgName) {
+        deleteIdD = id;
+        deleteUrlD = url;
+        delCallBackfuncD = callBackFunc;
+        nameOfImage = imgName;
+
+        $("#delete").modal("show");
+
+    }
+
+    function ConfirmDelete() {
+        $.ajax({
+            type: "Post",
+            url: deleteUrlD,
+            data: { id: deleteIdD, img: nameOfImage },
+            success: function (result) {
+                if (result == "1") {
+                    $("#delete").modal("hide");
+                    toastr.success("Delete Successfully", { timeOut: 1000 });
+                    delCallBackfuncD();
+                }
+                else if (result == "0") {
+                    toastr.error("This delete only Admin", { timeOut: 1000 });
+                    $("#delete").modal("hide");
+                }
+                else {
+                    toastr.error("There is no data to delete !", "Alert", { timeOut: 1000 });
+                    $("#delete").modal("hide");
+                }
+            }
+        });
+    }
+
+</script>

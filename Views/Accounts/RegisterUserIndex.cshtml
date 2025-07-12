@@ -1,0 +1,177 @@
+﻿@{
+    Layout = "~/Pages/Shared/_layout.cshtml";
+}
+
+
+<!-- Registration 11 - Bootstrap Brain Component -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-8 col-md-10">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-5">
+                    <!-- Title -->
+                    <div class="text-center">
+                        <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                        <p class="mb-4">User List? <a href="@Url.Action("Index", "User")"> here </a></p>
+                    </div>
+
+                    <!-- Form Start -->
+
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <input type="text" class="form-control form-control-user" id="firstName" placeholder="First Name">
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-user" id="lastName" placeholder="Last Name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user" id="username" placeholder="Username">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email" class="form-control form-control-user" id="email" placeholder="Email Address">
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <input type="date" class="form-control form-control-user" id="fromDate" placeholder="Joining Date">
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="date" class="form-control form-control-user" id="toDate" placeholder="End Date">
+                            </div>
+                        </div>
+
+                        <!-- Role Select -->
+                        <div class="form-group">
+                            <select class="form-control form-control-user" id="roleId">
+                                <option value="0">Select Role</option>
+                                <option value="1">Admin</option>
+                                <option value="2">User</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <input type="password" class="form-control form-control-user" id="password" placeholder="Password">
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="password" class="form-control form-control-user" id="cPassword" placeholder="Repeat Password">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox small">
+                            <input type="checkbox" class="custom-control-input" name="iAgree" id="iAgree" required>
+                                <label class="custom-control-label" for="iAgree">
+                                    I agree to the <a href="#">terms and conditions</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary btn-user btn-block" onclick="signUp()">Sign Up</button>
+
+                    <!-- Form End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    $(function (){
+        document.title = 'Sign Up';
+    });
+
+    $('#password, #cPassword').on('keyup', function () {
+        if ($('#password').val() == $('#cPassword').val()) {
+            $('#messagePassword').html('Matching').css('color', 'green');
+        } else
+            $('#messagePassword').html('Not Matching').css('color', 'red');
+    });
+
+    function resetSignUp() { 
+        $('#firstName').val('');
+        $('#lastName').val('');
+        $('#username').val('');
+        $('#email').val('');
+        $('#password').val('');
+        $('#cPassword').val('');
+        $('#fromDate').val('');
+        $('#toDate').val('');
+        $('#roleId').val('0');
+        $('#messagePassword').val('');
+        $('input[name="iAgree"]').prop('checked', false)
+    }
+
+    function signUp() { 
+
+        if ($('#firstName').val() == '') {
+            toastr.error("please fill First Name");
+            $('#firstName').focus();
+        }
+         else if($('#username').val() == '' || $('#username').val() == null){
+            toastr.error("please fill username");
+            $('#username').focus();
+        }
+
+        else if($("#email").val() == null || $("#email").val() == '' || !$('#email').val().match(/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/)){
+            toastr.error("Please insert email");
+            $("#email").focus();
+        }
+        else if ($('#fromDate').val() == '' || $('#fromDate').val() == null) {
+            toastr.error("please fill Joining Date");
+            $('#fromDate').focus();
+        }
+        else if ($('#roleId').find('option:selected').val() === "0") {
+            toastr.error("Choose role", "Alert", { timeOut: 5000 });
+            $('#roleId').focus();
+        }
+
+        else if ($('#password').val() !== $('#cPassword').val() || $('#password').val() == null || $('#password').val() == '') {
+            toastr.error("Passport not match");
+            $('#password').focus();
+        }
+        else if ($("input:checkbox[name=iAgree]:checked").is(":checked") == false) {
+            toastr.error("You must take the terms and condition");
+            $('#iAgree').focus();
+        }
+      
+
+        else{
+                var data = {
+                    name : $('#firstName').val(),
+                    username : $('#username').val(),
+                    intRoleid : $('#roleId').val(),
+                    password : $('#password').val(),
+                    email : $('#email').val(),
+                    fromDate : $('#fromDate').val(),
+                    toDate : $('#toDate').val(),
+                };
+                $.ajax({
+                    url : "/Accounts/AddUser",
+                    type : 'Post',
+                    dataType : 'Json',
+                    data : data,
+                    success: function (data) {
+                        if (data == "1") {
+                            toastr.success("Add successfully", { timeOut: 1000 });
+                            resetSignUp();
+                            $('#firstName').focus();
+                        }
+                        else {
+                        toastr.error("Username or Email Already Register", { timeOut: 1000 });
+                        }
+                    
+                    },
+                });
+            }
+    }
+
+</script>

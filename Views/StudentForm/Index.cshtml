@@ -1,0 +1,787 @@
+﻿@{
+    Layout = "~/Pages/Shared/_layout.cshtml";
+}
+
+<style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1.5rem;
+            border-bottom: none;
+        }
+        
+        .card-header h4 {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .card-body {
+            padding: 2.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+        
+        h5 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e9ecef;
+            position: relative;
+        }
+        
+        h5::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 0.75rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-divider {
+            margin: 2rem 0;
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--primary-color), rgba(0, 0, 0, 0));
+        }
+        
+        .form-group1 {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        /* #responseMessage {
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .success-message {
+            color: #28a745;
+        }
+        
+        .error-message {
+            color: var(--accent-color);
+        } */
+        
+    </style>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-lg">
+                    <div class="card-header text-white">
+                        <h4 class="text-center mb-0"><i class="fas fa-user-graduate me-2"></i>Student Registration Form</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Personal Details -->
+                        <input type="hidden" id="pdID">
+                        <h5><i class="fas fa-user-circle me-2"></i>Personal Details</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="firstName" placeholder="Enter your first name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="middleName" class="form-label">Middle Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="middleName" placeholder="Enter your middle name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Enter your last name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="gender" class="form-label">Gender</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                                    <select id="gender" class="form-select">
+                                        <option value="0">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="address" class="form-label">Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                    <input type="text" class="form-control" id="address" placeholder="Enter your address">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="dateOfBirth" class="form-label">DOB (AD)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    <input type="date" class="form-control" id="dateOfBirth">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="telephone" class="form-label">Telephone</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="text" class="form-control" id="telephone" placeholder="Enter telephone number">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
+                                    <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="maritalStatus" class="form-label">Marital Status</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-heart"></i></span>
+                                    <select id="maritalStatus" class="form-select">
+                                        <option value="0">Select</option>
+                                        <option value="single">Single</option>
+                                        <option value="married">Married</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="email" class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- Education Details -->
+                        <input type="hidden" id="eId">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5><i class="fas fa-graduation-cap me-2"></i>Education Details</h5>
+                            <button class="btn btn-sm btn-outline-primary" type="button" id="education_fields" onclick="education_fields();">
+                                <i class="fas fa-plus me-1"></i>Add Education
+                            </button>
+                        </div>
+                        <div id="educationData">
+                            <div class="form-group1">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="courseName1" class="form-label">Course Name</label>
+                                        <select id="courseName1" class="form-select">
+                                            <option value="0">Select</option>
+                                            <option value="master">Master's Degree</option>
+                                            <option value="bachelor">Bachelor's Degree</option>
+                                            <option value="intermediate">Intermediate (+2)</option>
+                                            <option value="slc">10th Level (SLC)</option>
+                                            <option value="other">Other</option>
+                                            <option value="CA/ACCA/CPA/FCA">CA/ACCA/CPA/FCA</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="institutionName1" class="form-label">Institution Name</label>
+                                        <input type="text" class="form-control" id="institutionName1" placeholder="Enter institution name">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="academicGradingName1" class="form-label">Academic Grading</label>
+                                        <select id="academicGradingName1" class="form-select">
+                                            <option value="0">Select</option>
+                                            <option value="percentage">Percentage</option>
+                                            <option value="gpa">GPA</option>
+                                            <option value="cgpa">CGPA</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="marks1" class="form-label">Marks</label>
+                                        <input type="text" class="form-control" id="marks1" placeholder="Enter marks">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="completionDate1" class="form-label">Date of Completion</label>
+                                        <input type="date" class="form-control" id="completionDate1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- Work Experience -->
+                        <input type="hidden" id="exID">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5><i class="fas fa-briefcase me-2"></i>Work Experience</h5>
+                            <button class="btn btn-sm btn-outline-primary" type="button" id="experience_fields" onclick="experience_fields();">
+                                <i class="fas fa-plus me-1"></i>Add Experience
+                            </button>
+                        </div>
+                        <div id="experienceData">
+                            <div class="form-group1">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="companyName1" class="form-label">Company Name</label>
+                                        <input type="text" class="form-control" id="companyName1" placeholder="Enter company name">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="position1" class="form-label">Position</label>
+                                        <input type="text" class="form-control" id="position1" placeholder="Enter your position">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="fromDate1" class="form-label">From Date</label>
+                                        <input type="date" class="form-control" id="fromDate1">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="toDate1" class="form-label">To Date</label>
+                                        <input type="date" class="form-control" id="toDate1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- English Test -->
+                        <input type="hidden" id="enID">
+                        <h5><i class="fas fa-language me-2"></i>English Test</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="englishTest" class="form-label">Test Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-certificate"></i></span>
+                                    <select id="englishTest" class="form-select">
+                                        <option value="0">Select</option>
+                                        <option value="IELTS">IELTS</option>
+                                        <option value="PTE">PTE</option>
+                                        <option value="Japanese">Japanese</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="testName" class="form-label">Test Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-certificate"></i></span>
+                                    <input type="text" class="form-control" id="testName" placeholder="Enter test name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="speaking" class="form-label">Speaking</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-comment"></i></span>
+                                    <input type="text" class="form-control" id="speaking" placeholder="Enter speaking score">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="listening" class="form-label">Listening</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-headphones"></i></span>
+                                    <input type="text" class="form-control" id="listening" placeholder="Enter listening score">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="reading" class="form-label">Reading</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-book-open"></i></span>
+                                    <input type="text" class="form-control" id="reading" placeholder="Enter reading score">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="writing" class="form-label">Writing</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-pen"></i></span>
+                                    <input type="text" class="form-control" id="writing" placeholder="Enter writing score">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="overall" class="form-label">Overall</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-star"></i></span>
+                                    <input type="text" class="form-control" id="overall" placeholder="Enter overall score">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="dateOfTest" class="form-label">Date of Test</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                    <input type="date" class="form-control" id="dateOfTest">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5">
+                            <button class="btn btn-primary w-100 py-3" id="AddStudentInfo" onclick="AddStudentInfo();">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Registration
+                            </button>
+                        </div>
+
+                        <div id="responseMessage" class="mt-4 text-center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ *@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#firstName').focus();
+    });
+
+    $(function () {
+        document.title = 'Student Form';
+
+    });
+
+    var personalDetailId;
+
+    function resetStudentInfo() {
+        $('#firstName').val('');
+        $('#middleName').val('');
+        $('#lastName').val('');
+        $('#gender').val('0');
+        $('#address').val('');
+        $('#dateOfBirth').val('');
+        $('#telephone').val('');
+        $('#phone').val('');
+        $('#maritalStatus').val('0');
+        $('#email').val('');
+    }
+
+    function AddStudentInfo() {
+        if ($("#firstName").val() == null || $("#firstName").val() == '') {
+            toastr.error("Choose First Name");
+            $("#firstName").focus();
+        }
+        else if ($("#lastName").val() == null || $("#lastName").val() == '') {
+            toastr.error("Choose last Name");
+            $("#lastName").focus();
+        }
+        else if ($("#email").val() == null || $("#email").val() == '') {
+            toastr.error("Choose email");
+            $("#email").focus();
+        }
+        else if ($("#phone").val() == null || $("#phone").val() == '') {
+            toastr.error("Choose phone");
+            $("#phone").focus();
+        }
+
+        else {
+
+            var data = {
+                firstName: $('#firstName').val(),
+                lastName: $('#lastName').val(),
+                gender: $('#gender').val(),
+                address: $('#address').val(),
+                dateOfBirth: $('#dateOfBirth').val(),
+                telephone: $("#telephone").val(),
+                phone: $("#phone").val(),
+                martialStatus: $("#maritalStatus").val(),
+                email: $("#email").val()
+
+            };
+            $.ajax({
+                url: "/StudentForm/AddPersonalDetailStudent",
+                type: 'Post',
+                dataType: 'Json',
+                data: data,
+                success: function (data) {                      
+                    
+                    if (data.code === "000") {
+                        toastr.success(data.message, "Success", { timeOut: 5000 });
+                        personalDetailId = data.data;
+                        AddStudentEducation();
+                        AddStudentExperience();
+                        AddStudentEnglishEvidence();
+                        $("#firstName").focus();
+                        resetStudentInfo();
+                    }
+                    else {
+                        toastr.error('Information is not save');
+                    }
+                }
+            });
+        }
+    }
+
+    function resetEnglishEvidence() {
+        $('#englishTest').val('0');
+        $('#testName').val('');
+        $('#speaking').val('');
+        $('#listening').val('');
+        $('#reading').val('');
+        $('#writing').val('');
+        $('#overall').val('');
+        $('#dateOfTest').val('');
+    }
+
+    function AddStudentEnglishEvidence() {
+        if ($("#englishTest").val() == null || $("#englishTest").val() == '') {
+            toastr.error("Choose english test Name");
+            $("#englishTest").focus();
+        }
+        else if ($("#testName").val() == null || $("#testName").val() == '') {
+            toastr.error("Choose Test Name");
+            $("#testName").focus();
+        }
+        if ($("#overall").val() == null || $("#overall").val() == '') {
+            toastr.error("Choose english test OverAll");
+            $("#overall").focus();
+        }
+
+        else {
+
+            var data = {
+                pdID: personalDetailId,
+                englishTest: $('#englishTest').val(),
+                testName: $('#testName').val(),
+                speaking: $('#speaking').val(),
+                listening: $('#listening').val(),
+                reading: $('#reading').val(),
+                writing: $("#writing").val(),
+                overall: $("#overall").val(),
+                dateOfTest: $("#dateOfTest").val()
+
+            };
+            $.ajax({
+                url: "/StudentForm/AddStudentEnglishEvidence",
+                type: 'Post',
+                dataType: 'Json',
+                data: data,
+                success: function (data) {
+                    toastr.success("Insert Sucessfully");
+                    resetEnglishEvidence();
+                }
+            });
+        }
+    }
+
+    //for experience field dynamic input box
+    var experienceAddMore = 1;
+    function experience_fields() {
+        experienceAddMore++;
+        var objTo_experience = document.getElementById('experienceData')
+        var experienceDivAdd = document.createElement("div");
+        experienceDivAdd.setAttribute("class", "form-group" + experienceAddMore);
+        var rdiv = 'removeclass' + experienceAddMore;
+        experienceDivAdd.innerHTML = `<div class="row">
+        <div class="col-md-10">
+        <hr style="border-top: dotted 1px;" />
+        </div>
+        <div class="col-md-2">
+        <div class="input-group-btn"> 
+        <button class="btn btn-danger" type="button" onclick="remove_experience_fields(` + experienceAddMore + `);"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+        </button>
+        </div>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-md-4 mb-3">
+        <label>Company Name</label> 
+        <input type="text" class="form-control ecName" id="companyName`+experienceAddMore+`" name="companyName[]" value="" placeholder="">
+        </div>
+        <div class="col-md-4 mb-3">
+        <label>Position</label> 
+        <input type="text" class="form-control ePosition" id="position`+experienceAddMore+`" name="position[]" value="" placeholder="">
+        </div>
+        <div class="col-md-4 mb-3">
+        <label>From Date</label> 
+        <input type="date" class="form-control eFromDate" id="fromDate`+experienceAddMore+`" name="fromDate[]" value="" placeholder="">
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-md-4 mb-3">
+        <label>To date </label> 
+        <input type="date" class="form-control eToDate" id="toDate`+experienceAddMore+`" name="toDate[]" value="" placeholder="to date">
+        </div>
+        </div>
+        <div class="clear"></div>`;
+
+        objTo_experience.appendChild(experienceDivAdd)
+    }
+    function remove_experience_fields(rid) {
+        $('.form-group' + rid).remove();
+    }
+    function resetExperience() {
+        $('#companyName1').val('');
+        $('#position1').val('');
+        $('#fromDate1').val('');
+        $('#toDate1').val('');
+
+        for (expRemove = 2; expRemove <= experienceAddMore; expRemove++) {
+            $('#experienceData .form-group' + expRemove).remove();
+        }
+
+    }
+
+    function AddStudentExperience() {
+
+                var dataExp = [];
+
+                //checking the dynamic input field
+                for (expD = 0; expD <= experienceAddMore; expD++) {
+
+                //unique input field finder
+                    $('#experienceData .form-group' + expD).each(function () {
+                        var orgName = $(this).find('#companyName' + expD).val();
+                        var position = $(this).find('#position' + expD).val();
+                        var fromDate = $(this).find('#fromDate' + expD).val();
+                        var toDate = $(this).find('#toDate' + expD).val();
+
+                // Validate if any field is array empty
+                if (orgName === "" || position === "" || fromDate === "") {
+                    toastr.error("Please fill out all the fields for experience" + (expD + 1));
+                    dataExp = [];
+                    return false; // Skip adding this data to the array
+                    $('#companyName1').focus();
+                }
+
+                        // Push data to array
+                        dataExp.push({
+                            pdID: personalDetailId,
+                            orgName: orgName,
+                            position: position,
+                            fromDate: fromDate,
+                            toDate: toDate,
+                        });
+                    });
+                }
+            if (dataExp != null && dataExp.length > 0) {
+            var obj = {
+                    expArrData: dataExp,
+                };
+
+                $.ajax({
+                    url: "/StudentForm/AddStudentExperience",
+                    type: 'Post',
+                    dataType: 'Json',
+                    data: obj,
+                    success: function (data) {
+                        toastr.success("Insert Sucessfully");
+                        resetExperience();
+                    //$('#companyName1').focus();
+                    }
+                });
+            }
+        }
+    //end experience all 
+
+
+    //for education dynamic input field
+    var educationAddMore = 1;
+    function education_fields() {
+        //debugger;
+        educationAddMore++;
+        var objTo_education = document.getElementById('educationData')
+        var educationDivAdd = document.createElement("div");
+        educationDivAdd.setAttribute("class", "form-group" + educationAddMore);
+        var rdiv = 'removeclass' + educationAddMore;
+        educationDivAdd.innerHTML = `<div class="row">
+            <div class="col-md-10">
+            <hr style="border-top: dotted 1px;" />
+            </div>
+            <div class="col-md-2">
+            <div class="input-group-btn">
+            <button class="btn btn-danger" type="button" onclick="remove_education_fields(` + educationAddMore + `);"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            </button>
+            </div>
+            </div>
+            </div>
+                <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Course Name</label>
+                                    <select id="courseName` + educationAddMore + `" class="form-select" >
+                                        <option value="">Select</option>
+                                        <option value="master">Master's Degree</option>
+                                        <option value="bachelor">Bachelor's Degree</option>
+                                        <option value="intermediate">Intermediate(+2)</option>
+                                        <option value="slc">10th Level(SLC)</option>
+                                        <option value="other">Other</option>
+                                        <option value="CA/ACCA/CPA/FCA">CA/ACCA/CPA/FCA</option>
+                                    </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Institution Name</label>
+                                    <input type="text" class="form-control" id="institutionName` + educationAddMore + `">
+
+                            </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Academic Grading Name</label>
+                                <select id="academicGradingName` + educationAddMore + `" class="form-select">
+                                <option value="">Select</option>
+                                <option value="percentage">Percentage</option>
+                                <option value="gpa">GPA</option>
+                                <option value="cgpa">CGPA</option>
+                            </select>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Marks</label>
+                                    <input type="text" class="form-control" id="marks` + educationAddMore + `" >
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Date of Completion</label>
+                                    <input type="date" class="form-control" id="completionDate` + educationAddMore + `">
+
+                            </div>
+                        </div>
+            <div class="clear"></div>`;
+
+        objTo_education.appendChild(educationDivAdd)
+    }
+    function remove_education_fields(rid) {
+        $('.form-group' + rid).remove();
+    }
+    function resetEducation() {
+        $('#courseName1').val('0');
+        $('#institutionName1').val('');
+        $('#academicGradingName1').val('0');
+        $('#marks1').val('');
+        $('#completionDate1').val('');
+
+        for (eduRemove = 2; eduRemove <= educationAddMore; eduRemove++) {
+            $('#educationData .form-group' + eduRemove).remove();
+        }
+
+
+    }
+
+    function AddStudentEducation() {
+
+        var dataEdu = [];
+
+        //checking the dynamic input field
+        for (eduD = 0; eduD <= educationAddMore; eduD++) {
+
+            //unique input field finder
+            $('#educationData .form-group' + eduD).each(function () {
+                var degreeNameE = $(this).find('#courseName' + eduD).val();
+                var institutionNameE = $(this).find('#institutionName' + eduD).val();
+                var academicGradingE = $(this).find('#academicGradingName' + eduD).val();
+                var marksE = $(this).find('#marks' + eduD).val();
+                var dateOfCompletionE = $(this).find('#completionDate' + eduD).val();
+
+                // Validate if any field is array empty
+                if (degreeNameE === "" || institutionNameE === "" || academicGradingE === "" || marksE === "" || dateOfCompletionE === "") {
+                    toastr.error("Please fill out all the fields for education" + (eduD + 1));
+                    dataEdu = [];
+                    return false; // Skip adding this data to the array
+                    $('#institutionName1').focus();
+                }
+
+                // Push data to array
+                dataEdu.push({
+                    pdID: personalDetailId,
+                    degreeName: degreeNameE,
+                    institutionName: institutionNameE,
+                    academicGrading: academicGradingE,
+                    marks: marksE,
+                    dateOfCompletion: dateOfCompletionE,
+                });
+            });
+        }
+        if (dataEdu !== null && dataEdu.length > 0) {
+            var obj = {
+                eduArrData: dataEdu,
+            };
+
+            $.ajax({
+                url: "/StudentForm/AddStudentEducation",
+                type: 'Post',
+                dataType: 'Json',
+                data: obj,
+                success: function (data) {
+                    toastr.success("Insert Sucessfully");
+                    resetEducation();
+                    //$('#institutionName1').focus();
+                }
+            });
+        }
+    }
+    //end education 
+
+</script>

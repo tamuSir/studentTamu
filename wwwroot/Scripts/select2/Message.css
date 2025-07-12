@@ -1,0 +1,145 @@
+﻿#editspecimenmessage {
+    font-size: 17px;
+    color: #0ed50e;
+    margin: 5% 0% 0% 0%;
+}
+
+#editerrorspec {
+    color: orangered;
+    margin: 0% 0% 0% 14%;
+    display: none;
+}
+#editsubtestmessage {
+    display: none;
+    color: greenyellow;
+    margin: 5% -7% 0% 0%;
+}
+#editcategorymessage {
+    font-size: 17px;
+    color: #0ed50e;
+    margin: 5% 0% 0% 0%;
+}
+
+#error {
+    display: none;
+    color: red;
+}
+#editmessagemethod {
+    color: greenyellow;
+    margin: 5% -7% 0% 0%;
+}
+#cke_comment {
+    margin-left: -15px;
+}
+
+.cke_inner .cke_reset {
+    height: 100px !important;
+}
+
+
+
+#messagepathotestlimit, #messageptl, #Editmessageptl, #subtestmessage, #optionmessage {
+    display: none;
+    color: greenyellow;
+    margin: 5% -7% 0% 0%;
+}
+
+
+#errormethodmessage, #erroragegroupmessage, #erroroperatordmessage, #errorgendermessage,
+#errorconvmessage, #errormetriclowmessage, #errormetrichighmessage, #errormetricunitmessage,
+#errorsilowmessage, #errorsihighmessage, #errorsiunitmessage, #errorsubtest, #erroroption,
+#errorrefrence, #errorstrInputmethod {
+    display: none;
+    color: #dc0101;
+    margin-right: 8px;
+    text-align: right;
+}
+
+.errormethodmessage, .erroragegroupmessage, .erroroperatordmessage, .errorgendermessage,
+.errorconvmessage, .errormetriclowmessage, .errormetrichighmessage, .errormetricunitmessage,
+.errorsilowmessage, .errorsihighmessage, .errorsiunitmessage, .errorsubtest, .errorstrInputmethod {
+    margin-left: 92px;
+    color: #00ffff;
+    display: none;
+}
+
+#edit-pathotestlimit .modal-dialog {
+    width: 50%;
+}
+
+.reftextarea {
+    margin-left: 7.2%;
+    width: 53%;
+    height: 55px;
+}
+
+.reftextarea1 {
+    margin-left: 1.7%;
+    width: 64.7%;
+    height: 55px;
+}
+
+#cke_2_contents {
+    height: 70px !important;
+}
+
+#cke_Refrence {
+    margin: 2%;
+    width: 75%;
+}
+
+#edit-pathotestlimit button.edit,
+#edit-pathotestlimit button.reset,
+#edit-pathotestlimit button.close {
+    border: none;
+    padding: 2% 4.8%;
+    font-size: 19px;
+    border-radius: 5px;
+}
+
+.perror {
+    position: absolute;
+    top: 1%;
+    left: 30%;
+    display: none;
+    color: #890e0e;
+}
+
+#strComment,
+.ql-toolbar.ql-snow {
+    background: white;
+    margin: 0 0 0 -1.9%;
+}
+
+#labmessage {
+    margin: 13px;
+    font-size: 18px;
+    color: greenyellow;
+}
+
+#cke_strComment {
+    margin-left: -15px;
+}
+
+#cke_1_contents {
+    height: 100px !important;
+}
+
+#categorymessage {
+    font-size: 17px;
+    color: #0ed50e;
+    margin: 5% 0% 0% 0%;
+    display: none;
+}
+
+#specimenmessage {
+    display: none;
+    color: greenyellow;
+    margin: 4% 0% 0% 0%;
+}
+
+#errorspec {
+    display: none;
+    margin-left: 85px;
+    color: orangered;
+}

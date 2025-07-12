@@ -1,0 +1,480 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="~/Scripts/jquery/jquery.min.js"></script>
+    <script src="~/Scripts/jquery/Jquery.ui.js"></script>
+    <link href="~/Scripts/jquery/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery/jquery.mask.min.js"></script>
+
+    <link href="~/Scripts/toaster/toaster.min.css" rel="stylesheet" />
+    <script src="~/Scripts/toaster/toaster.min.js"></script>
+    <link href="~/Scripts/select2/Message.css" rel="stylesheet" />
+    <link href="~/Scripts/select2/select2.css" rel="stylesheet" />
+    <script src="~/Scripts/select2/select2.js"></script>
+    <script src="~/Scripts/function/Function.js"></script>
+    <script src="~/Scripts/function/multiple.js"></script>
+
+    <style>
+        .form-section {
+            display: none;
+        }
+
+            .form-section.active {
+                display: block;
+            }
+
+        .nav-pills .nav-link.active {
+            font-weight: bold;
+        }
+
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 70%;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">First Setup Management System</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Navigation Pills -->
+                        <ul class="nav nav-pills mb-4" id="managementPills" role="tablist">
+                            
+                            @if (ViewBag.companyCheck == 0 || ViewBag.companyCheck == null ) {
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="company-tab" data-bs-toggle="pill" data-bs-target="#company" type="button" role="tab">Company</button>
+                            </li>
+                            }
+
+
+                            @if (ViewBag.userCheck != 1 || ViewBag.userCheck == null )
+                            {
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="account-tab" data-bs-toggle="pill" data-bs-target="#account" type="button" role="tab">Create Account</button>
+                                </li>
+                            }
+
+
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="role-tab" data-bs-toggle="pill" data-bs-target="#role" type="button" role="tab">Roles</button>
+                                </li>
+
+                                <li class="nav-item" role="presentation" id="hiddenFinished" hidden>
+                                    <input type="hidden" id="roleCheckedNumber" value="" />
+                                    <button class="nav-link" id="finished" type="button" onclick="finish()">Finish</button>
+                                </li>
+                        </ul>
+
+                        <div class="tab-content" id="managementPillsContent">
+                            <!-- Company Creation Form -->
+                            @if (ViewBag.companyCheck == 0 || ViewBag.companyCheck == null )
+                            {
+
+                                <div class="tab-pane fade show active" id="company" role="tabpanel">
+                                    <div class="mb-3">
+                                        <label for="companyName" class="form-label">Company Name</label>
+                                        <input type="text" class="form-control" id="companyName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label">Address</label>
+                                        <textarea class="form-control" id="address" rows="2" required></textarea>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input type="tel" class="form-control" id="phone" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" required>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" id="Add_Company" onclick="InsertCompany()">Create Company</button>
+                                </div>
+                            
+                            }
+                            
+                            
+                            <!-- Account Creation Form -->
+                            @if (ViewBag.userCheck != 1 || ViewBag.userCheck == null )
+                            {
+                                <div class="tab-pane fade" id="account" role="tabpanel">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="name" class="form-label">Full Name</label>
+                                            <input type="text" class="form-control" id="name" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="accountEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="accountEmail" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="username" class="form-label">Username</label>
+                                            <input type="text" class="form-control" id="username" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="intRoleid" class="form-label">Role</label>
+                                            <select class="form-select" id="intRoleid" required>
+                                                <option value="1">Admin</option>
+                                                @* <option value="2">User</option> *@
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6 position-relative">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="password" required>
+                                            <i class="fas fa-eye password-toggle" onclick="togglePassword('password')"></i>
+                                        </div>
+                                        <div class="col-md-6 position-relative">
+                                            <label for="retypePassword" class="form-label">Re-type Password</label>
+                                            <input type="password" class="form-control" id="retypePassword" required>
+                                            <i class="fas fa-eye password-toggle" onclick="togglePassword('retypePassword')"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="fromDate" class="form-label">From Date</label>
+                                            <input type="date" class="form-control" id="fromDate" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="toDate" class="form-label">To Date</label>
+                                            <input type="date" class="form-control" id="toDate" required>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" id="add_user" onclick="createUser()">Create Account</button>
+                                </div>
+
+                            }
+                            
+
+                            <!-- Role Management Form -->
+
+                                <div class="tab-pane fade" id="role" role="tabpanel">
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Select Role(s):</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="adminRole" name="roles" value="Admin">
+                                            <label class="form-check-label" for="adminRole">
+                                                <i class="fas fa-user-shield me-2"></i>Admin
+                                            </label>
+                                            <p class="text-muted small mt-1">Full access to all system features</p>
+                                        </div>
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" id="userRole" name="roles" value="User">
+                                            <label class="form-check-label" for="userRole">
+                                                <i class="fas fa-user me-2"></i>User
+                                            </label>
+                                            <p class="text-muted small mt-1">Limited access to system features</p>
+                                        </div>
+                                    </div>
+                                <button type="button" class="btn btn-primary" id="add_role" onclick="InsertRole()">Save Roles</button>
+
+                                </div>
+
+                            <!-- end Role Management Form -->
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+            
+        $(document).ready(function () {
+
+        });
+
+        $(function (){
+            document.title = 'Company First Setup';
+        });
+
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = field.nextElementSibling;
+
+            if (field.type === "password") {
+                field.type = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                field.type = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+
+        function resetCompany(){        
+            $('#companyName').val('');
+            $('#address').val('');
+            $('#phone').val('');
+            $('#email').val('');
+        }
+
+        function InsertCompany() {
+
+            if ($('#companyName').val() == '') {
+                toastr.error("please fill Company Name");
+                $('#companyName').focus();
+            }
+             else if($('#address').val() == '' || $('#address').val() == null){
+                toastr.error("please fill address");
+                $('#address').focus();
+            }
+
+            else if($("#email").val() == null || $("#email").val() == '' || !$('#email').val().match(/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/)){
+                toastr.error("Please insert email");
+                $("#email").focus();
+            }
+            else if ($('#phone').val() == '' || $('#phone').val() == null || !$('#phone').val().match(/(?:\+977[- ])?\d{2}-?\d{7,8}/)) {
+                toastr.error("please fill phone");
+                $('#phone').focus();
+            }
+
+
+            else{
+                    var data = {
+                        companyName : $('#companyName').val(),
+                        address : $('#address').val(),
+                        phone : $('#phone').val(),
+                        email : $('#email').val(),
+
+                    };
+                    $.ajax({
+                        url : "/CompanyCreation/AddCompany",
+                        type : 'Post',
+                        dataType : 'Json',
+                        data : data,
+                        success: function (data) {
+                            if (data == "1") {
+                                toastr.success("Add successfully", { timeOut: 1000 });
+                                resetCompany();
+                                $('#company').prop('hidden', true);
+                                $('#company-tab').prop('hidden', true);
+                                $('#account-tab').click();
+                            }
+                            else {
+                            toastr.error("You can Register only one company", { timeOut: 1000 });
+                            }
+
+                        },
+                    });
+                }
+        }
+
+            $('#password, #retypePassword').on('keyup', function () {
+            if ($('#password').val() == $('#retypePassword').val()) {
+                $('#messagePassword').html('Matching').css('color', 'green');
+            } else
+                $('#messagePassword').html('Not Matching').css('color', 'red');
+        });
+
+        function resetUser() {
+            $('#name').val('');
+            $('#accountEmail').val('');
+            $('#username').val('');
+            $('#password').val('');
+            $('#retypePassword').val('');
+            $('#fromDate').val('');
+            $('#toDate').val('');
+        }
+
+        function createUser() {
+
+            if ($('#name').val() == '') {
+                toastr.error("please fill First Name");
+                $('#firstName').focus();
+            }
+
+            else if($("#accountEmail").val() == null || $("#accountEmail").val() == '' || !$('#accountEmail').val().match(/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/)){
+                toastr.error("Please insert email");
+                $("#email").focus();
+            }
+            else if($('#username').val() == '' || $('#username').val() == null){
+                toastr.error("please fill username");
+                $('#username').focus();
+            }
+            else if ($('#password').val() !== $('#retypePassword').val() || $('#password').val() == null || $('#password').val() == '') {
+                toastr.error("Passport not match");
+                $('#password').focus();
+            }
+
+            else if ($('#fromDate').val() == '' || $('#fromDate').val() == null) {
+                toastr.error("please fill Joining Date");
+                $('#fromDate').focus();
+            }
+
+            else{
+                    var data = {
+                        name : $('#name').val(),
+                        username : $('#username').val(),
+                        intRoleid : $('#intRoleid').val(),
+                        password : $('#password').val(),
+                        email : $('#accountEmail').val(),
+                        fromDate : $('#fromDate').val(),
+                        toDate : $('#toDate').val(),
+                    };
+                    $.ajax({
+                        url : "/Accounts/AddUser",
+                        type : 'Post',
+                        dataType : 'Json',
+                        data : data,
+                        success: function (data) {
+                            if (data == "1") {
+                                toastr.success("Add successfully", { timeOut: 1000 });
+                                resetUser();
+                                $('#account').prop('hidden', true);
+                                $('#account-tab').prop('hidden', true);
+                                $('#role-tab').click();
+                            }
+                            else {
+                            toastr.error("Username or Email Already Register", { timeOut: 1000 });
+                            }
+
+                        },
+                    });
+                }
+        }
+
+        function resetRole(){
+            $('input #adminRole').prop('checked', false);
+            $('input #userRole').prop('checked', false);
+        }
+
+        function allDeleteRole()
+        {
+                $.ajax({
+                    url : "/CompanyCreation/deleteRoleData",
+                    type : 'Post',
+                    dataType : 'Json',
+                    //data : data,
+                    success: function (data) {
+                        if (data == "1") {
+
+                        }
+                        else {
+                        toastr.error("Delete error", { timeOut: 1000 });
+                        }
+
+                    },
+                });
+        }
+
+        function InsertRole() {
+            var checkedRoleValues = [];
+
+
+            if ($('#adminRole').prop('checked')) {
+
+                checkedRoleValues.push({
+                    intRoleId : 1,
+                    roleName: $('#adminRole').val(),
+                });
+            }
+
+            if ($('#userRole').prop('checked')) {
+                checkedRoleValues.push({
+                     intRoleId : 2,
+                    roleName : $('#userRole').val(),
+
+                });
+            }
+           if (checkedRoleValues != null && checkedRoleValues.length === 2) {
+               allDeleteRole();
+
+               var data = {
+                    roleArrayData : checkedRoleValues,
+
+                };
+                $.ajax({
+                    url : "/CompanyCreation/AddRole",
+                    type : 'Post',
+                    dataType : 'Json',
+                    data : data,
+                    success: function (data) {
+                        if (data == "1") {
+                            toastr.success("Add successfully", { timeOut: 1000 });
+                            resetRole();
+                            $('#role').prop('hidden', true);
+                            $('#role-tab').prop('hidden', true);
+                            $('#hiddenFinished').prop('hidden', false);
+                        }
+                        else {
+                        toastr.error("Please insert Role", { timeOut: 1000 });
+                        }
+
+                    },
+                });
+           }
+
+           else{
+                toastr.error("Please checked two means all Role", { timeOut: 1000 });
+           }
+        }
+
+
+        //var roleCount =0;
+        function roleChecking(callBack){
+        
+            $.ajax({
+            url:"/CompanyCreation/CheckedRole",
+            type : 'GET',
+            dataType: 'Json',
+            success: function (data) {
+                    
+                var roleCount = data;
+                    callBack(roleCount);
+                    },
+                    
+                    error: function () {
+                     toastr.error("Failed to get role count");
+                     callBack(0); 
+                    }
+            });
+        }
+
+        function finish(){
+
+          roleChecking(function (roleCount) {
+                if (roleCount == 2) {
+                    window.location.href = '@Url.Action("Login", "Accounts")';
+                } else {
+                    toastr.error("Please check and insert both Roles", { timeOut: 1000 });
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>

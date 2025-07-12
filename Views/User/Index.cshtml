@@ -1,0 +1,220 @@
+﻿@{
+    Layout = "~/Pages/Shared/_layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-10">
+            <h2 class="mb-4">
+                User Management
+            </h2>
+        </div>
+        <div class="col-md-2 text-right">
+            <a class="nav-link" href="@Url.Action("RegisterUserIndex","Accounts")">
+                <h4>Add User</h4>
+                @* <i class="fa fa-plus"></i> *@
+            </a>
+        </div>
+    </div>
+
+    <input type="hidden" id="userId" value="" />
+    
+    <div class="col-md-5">
+        <input type="text" id="searchUser" class="form-control" placeholder="Search user">
+    </div>
+    <br>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>S.N</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="userDataList">
+
+        </table>
+    </div>
+</div>
+
+<!-- JavaScript for button actions -->
+<script>
+    $(document).ready(function () {
+    });
+
+    $(function () {
+        document.title = 'User Management';
+
+        UserList();
+    });
+
+       $('#searchUser').keyup(function (e) {
+             var value = $(this).val().toLowerCase();
+              $("#userDataList tr").filter(function () {
+                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+             });
+     });
+
+   //All list user
+    function UserList() {
+        $.ajax({
+            url: "/User/UserList",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                var htm = "";
+                var i = 0;
+                var sn = 0;
+                if (data.length !== 0) {
+                    $.each(data, function (i, item) {
+                        i++;
+                        sn++;
+
+                        htm += '<tr style="cursor:pointer;" data-id="' + item.intUserId + '">';
+                        htm += '<td>' + sn + '</td>';
+                        htm += '<td class="nameE'+ item.intUserId + '">' + item.name + '</td>';
+                        htm += '<td>' + item.username + '</td>';
+                        htm += '<td class="emailE'+ item.intUserId +'">' + item.email + '</td>';
+                        htm += '<td>' + item.roleName + '</td>';
+                        htm += item.status == 1 ? '<td class="statusE' + item.intUserId + '"><span class="badge bg-success">Active</span></td>' : '<td class="statusE' + item.intUserId + '"><span class="badge bg-warning text-dark">Pending</span></td>';
+                        
+                        htm += '<td><span><button data-id="' + item.intUserId + '" id="editA' + item.intUserId + '"  class="btn btn-primary editUser"  data-toggle="tooltip" title="Edit" data-placement="top"><i class="fas fa-edit"></i></button></span><button dataU-id="' + item.intUserId + '" id="updateUA' + item.intUserId + '" onclick="updateUser('+ item.intUserId + ');" class="btn btn-primary updateUC"  data-toggle="tooltip" title="update" data-placement="top" hidden><i class=fas fa-update"></i></button><span style="margin-left: 5px;"><button data-deleteId="' + item.intUserId + '"  class="btn btn-danger CVdelete"  title="Delete"  data-placement="top"><i class="fas fa-trash-alt"></i></button></span></td>';
+
+                        htm += '<tr>';
+                        htm += '</tr>';
+
+                    });
+                    $('#userDataList').html(htm);
+                    
+                }
+                else {
+                    htm += '-------------------------------------Data Not Avialable---------------------------------------------'
+                }
+
+            },
+            error: function () {
+                $('#userDataList').htm("<tr><td colspan='8'><center style='color:red;>Data Not Found</center></td></tr>");
+            }
+        });
+    }
+
+    //edit user
+    var selectStatus = [
+        { value: 'True', text: 'Active', activeStatus: 1 },
+        { value: 'False', text: 'Pending', activeStatus: 0 },
+    ];
+
+    $('#userDataList').on('click', '.editUser', function () {
+
+        var intUserId = $(this).attr('data-id');
+
+        $.ajax({
+            url: '/User/getUserById?id=' + intUserId,
+            type: 'Get',
+            dataType: 'Json',
+            success: function (data) {
+
+
+                $("td.nameE" + intUserId).html('<input id="name' + intUserId + '" class="form-control" type="text" value="' + data.name + '">');
+                $("td.emailE" + intUserId).html('<input id="email' + intUserId + '" class="form-control" type="text" value="' + data.email + '">');
+
+                // Replace role cell with select dropdown
+                let selectHtml = '<select class="form-select" id="statusEA'+ intUserId +'">';
+                selectStatus.forEach(option => {
+                    var selected = option.activeStatus == data.status ? 'selected' : '';
+                    selectHtml += `<option value="${option.value}" ${selected}>${option.text}</option>`;
+                });
+                selectHtml += `</select>`;
+                $('td.statusE' + intUserId).html(selectHtml);
+
+                $('#editA' + intUserId).hide();
+                $('#updateUA' + intUserId).removeAttr("hidden");
+            }
+
+        });
+
+    })
+
+    //update user
+    function updateUser(userId) {
+
+        var nameData = $("#name" + userId).val();
+        var emailData = $("#email" + userId).val();
+        var statusData = $("#statusEA" + userId).val();
+
+        var IsValidData = true;
+        if ($("#name" + userId).val() == '') {
+            toastr.warning('Type name is  Name !');
+            IsValidData = false;
+            return false;
+        }
+        if (IsValidData) {
+            var obj = {
+                intUserId: userId,
+                name: $("#name" + userId).val(),
+                email: $("#email" + userId).val(),
+                status: $("#statusEA" + userId).val(),
+
+            };
+            $.ajax({
+                url: "/User/updateUser",
+                data: obj,
+                method: 'post',
+                success: function (data) {
+                    toastr.success("About Updated");
+
+                    $("td.nameE" + userId).text(nameData);
+                    $("td.emailE" + userId).text(emailData);
+                    //$("td.statusE" + userId).text(statusData);
+
+                    if (statusData == "True") {
+                        $("td.statusE" + userId).html('<span class="badge bg-success"> Active </span>')
+                    }
+                    else {
+                        $("td.statusE" + userId).html('<span class="badge bg-warning text-dark"> Pending </span>')                        
+                    }
+
+                    $('#editA' + userId).show();
+                    $('#updateUA' + userId).attr("hidden", true);
+
+                },
+                error: function (e) {
+                    toastr.error()
+
+                }
+            });
+        }
+    }
+
+    //delete user
+    $('#userDataList').on('click', '.CVdelete', function () {
+        var userId = $(this).attr('data-deleteId');
+        //var intRole = $('#intRoleId').val();
+        if (confirm("Are sure wants to delete?")) {
+            $.ajax({
+                url: "/User/DeleteUser",
+                dataType: 'json',
+                method: 'get',
+                data: {
+                    id: userId,
+                },
+                success: function (data) {
+
+                    toastr.success("Delete successfully", { timeOut: 1000 });
+                    UserList();
+    
+                },
+                error: function (data) {
+                    toastr.error("Error in Delete");
+                }
+            });
+        }
+    });
+
+</script>
